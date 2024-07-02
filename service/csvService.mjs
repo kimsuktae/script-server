@@ -8,10 +8,12 @@ const __dirname = path.dirname(__filename);
 
 const createCsv = async ({ name, data } = request) => {
   const filePath = getFilePath(name);
+  const header = getHeader(data);
 
+  console.log(filePath);
   const csvWriter = createObjectCsvWriter({
     path: filePath,
-    header: header[name],
+    header: header,
   });
 
   await csvWriter.writeRecords(data);
@@ -19,8 +21,15 @@ const createCsv = async ({ name, data } = request) => {
   return filePath;
 };
 
-const header = {
-  greet: [{ id: 'name', title: 'Name' }],
+const getHeader = (data) => {
+  if (data.length === 0) {
+    return [{ id: 'name', title: 'Data not exits' }];
+  }
+
+  return Object.keys(data[0]).map((key) => ({
+    id: key,
+    title: key.charAt(0).toUpperCase() + key.slice(1),
+  }));
 };
 
 const getFilePath = (name) => {
