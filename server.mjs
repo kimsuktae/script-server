@@ -5,17 +5,33 @@ import download from './service/downloadCsvService.mjs';
 import runScript from './service/runScriptService.mjs';
 import { checkOrigin, corsOptions } from './config/corsConfig.mjs';
 import { configDotenv } from 'dotenv';
+import ngrok from '@ngrok/ngrok';
 
 const app = express();
 const port = 9999;
-configDotenv();
 
 const handler = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
+configDotenv();
+
 app.use(checkOrigin);
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
+
+(async function () {
+  const listener = await ngrok.forward({
+    addr: port,
+    domain: 'holy-enabled-lab.ngrok-free.app',
+    authtoken: process.env.NGROK_TOKEN,
+  });
+
+  console.log(`Ingress established at: ${listener.url()}`);
+})();
+
+app.get('/', (req, res) => {
+  res.status(200).send('ok');
+});
 
 app.post(
   '/datas',

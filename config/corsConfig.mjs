@@ -19,5 +19,9 @@ export const checkOrigin = (req, res, next) => {
 export const corsOptions = {
   origin: allowedDomains,
   methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'Ngrok-Skip-Browser-Warning',
+  ],
 };

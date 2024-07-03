@@ -5,7 +5,6 @@ import postgresPool from '../util/postgresPool.mjs';
 const theHMembers = async (parameter) => {
   const comparisonDate = getComparisonDate(parameter);
 
-  console.log(comparisonDate);
   const rauths = await getRauths();
   const edge11Members = await getEdge11Members();
   const edge11MembersBlueIds = edge11Members.rows.reduce(
@@ -27,7 +26,6 @@ const theHMembers = async (parameter) => {
     .groupBySiteId()
     .formatSiteData();
 
-  console.log(result);
   return await createCsv({ name: 'theHMembers', data: result });
 };
 
